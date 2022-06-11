@@ -1,4 +1,5 @@
 import pygame
+import pygame.freetype
 import sys
 import time
 import random
@@ -16,6 +17,8 @@ clock = pygame.time.Clock()
 segment_width = 20
 segement_height = 20
 segment_seperation = 3
+
+font = pygame.freetype.SysFont('timesnewroman',  24, bold = True)
 
 
 class segment(pygame.sprite.Sprite):
@@ -72,7 +75,6 @@ def main():
     score = 0
     x_direction = (segment_width + segment_seperation)
     y_direction = 0
-    print("Score: 0")
 
     while True:
         for event in pygame.event.get():
@@ -118,29 +120,26 @@ def main():
         point.update()
         screen.fill((255,255,255),[15,15,screen_width-30,screen_height-30])
         all_sprites_list.draw(screen)
+        font.render_to(screen, (screen_width-50,screen_height-50), f"{score}", (0, 0, 0))
         pygame.display.flip()
 
         # Checks for Snake collision with point
         if pygame.sprite.collide_rect(point,snake_segments[0]):
             point.timer = 0
             score += 1
-            print("       " + str(score))
             length(2)
 
         # Checks for Snake collision with itself
         for n in range(1,score):
             if pygame.sprite.collide_rect(snake_segments[0],snake_segments[n]):
-                print("GAME OVER")
                 sys.exit()
 
         # Checks for Snake collision with the border
         if snake_segments[0].rect.x <= 15 or snake_segments[0].rect.x >= screen_width-30:
-            print("GAME OVER")
             sys.exit()
 
 
         if snake_segments[0].rect.y <= 15 or snake_segments[0].rect.y >= screen_height-30:
-            print("GAME OVER")
             sys.exit()
 
         clock.tick(15)  # Sets game to 15 fps
